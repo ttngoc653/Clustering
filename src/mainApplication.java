@@ -60,6 +60,7 @@ public class mainApplication {
 			}
 		}
 	}
+	@SuppressWarnings("unused")
 	private static void exportOnlyAssignmentsFile(String file_name_in) {
 		try {
 			FileWriter fw = new FileWriter(new File("assignments.csv"));
@@ -77,6 +78,7 @@ public class mainApplication {
 			e.printStackTrace();
 		}
 	}
+	@SuppressWarnings("unused")
 	private static void exportModelAndAssignmentsFile(String file_name_in) {
 		try {
 			FileWriter fw = new FileWriter(new File("model.txt"));
@@ -128,7 +130,7 @@ public class mainApplication {
 		} catch (Exception e) {	}
 		return false;
 	}
-	public static void main(String[] args) {
+	public static final void main(String[] args) {
 		// exportOnlyModelFile("sessions.csv");
 		// exportOnlyAssignmentsFile("sessions.csv");
 		// exportModelAndAssignmentsFile("sessions.csv");
