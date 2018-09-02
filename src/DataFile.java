@@ -18,7 +18,7 @@ public class DataFile {
 	public void setData(List<String> data) {
 		this.data = data;
 	}
-	@SuppressWarnings({ "resource", "unused" })
+	@SuppressWarnings({ "resource" })
 	public DataFile(String file_in_name) {
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(file_in_name));
@@ -33,7 +33,6 @@ public class DataFile {
 				data.add(_data);
 			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

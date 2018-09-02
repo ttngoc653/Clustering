@@ -15,9 +15,11 @@ class ClusterItem {
 	}
 	public Integer numberItemDifferent() {
 		Integer i_number = 0;
-		for (int i = 0; i < values.size(); i++) {
+		if(values.size() == 0) return 0;
+		if(values.size() == 1) return 1;
+		for (int i = 1; i < values.size(); i++) {
 			int j = i - 1;
-			for (;values.get(i).equals(values.get(j)) || j >= 0; j--) ;
+			for (; j >= 0 && !values.get(i<0?0:i).equals(values.get(j<0?0:j)); j--) ;
 			if(j<0) i_number++;
 		}
 		return i_number;
@@ -31,10 +33,11 @@ class ClusterItem {
 	public String mean() {
 		Double d_temp = 0D;
 		String str_return = "";
-		for (String i_str : values) {
+		
+		for (int i = 0; i < values.get(0).split(",").length; i++) {
 			d_temp = 0D;
-			for (String i_i_str : i_str.split(",")) {
-				d_temp += Double.valueOf(i_i_str);
+			for (int j = 0; j <values.size(); j++) {
+				d_temp += Double.valueOf(values.get(j).split(",")[i]);
 			}
 			str_return += "," + String.valueOf(d_temp / values.size());
 		}
@@ -97,29 +100,44 @@ class Cluster {
 		}
 	}
 	public Cluster(DataFile data_file, Integer num_cluster) {
+		System.out.println("Start running with " + num_cluster + " clusters");
 		this.num_cluster = num_cluster;
 		this.centeres = new ArrayList<>();
 		this.groups = new ArrayList<>();
+		Integer num_run = 1;
 		
 		for (int i = 0; i < num_cluster; i++) {
 			this.centeres.add(data_file.getData().get(i));
 			this.groups.add(new ClusterItem());
+			this.groups.get(i).addItem(data_file.getData().get(i));
 		}
 		do {
-			for (int i = 0; i < data_file.getData().size(); i++) {
+			System.out.println("\tStart counting " + num_run + " times");
+			for (int i = (num_run == 1 ? num_cluster : 0); i < data_file.getData().size(); i++) {
 				this.groups.get(chooseGroup(centeres, data_file.getData().get(i))).addItem(data_file.getData().get(i));;
 			}
-			if(equalNumberValueDifferentAllGroup()) return;
+			if(equalNumberValueDifferentAllGroup()) break;
+			else if(equalMeanGroupsAfterBefore()) break;
 			else {
-				removeAllItemInGroups();
 				this.centeres.clear();
 				for (int i = 0; i < num_cluster; i++) {
 					this.centeres.add(this.groups.get(i).mean());
 				}
+				removeAllItemInGroups();
+				num_run++;
 			}
 		} while (true);
+		
+		System.out.println("Done with 10 subgroups!");
+	}
+	private boolean equalMeanGroupsAfterBefore() {
+		for (int i = 0; i < num_cluster; i++) {
+			if(!this.groups.get(i).mean().equals(this.centeres.get(i))) return false;
+		}
+		return true;
 	}
 	public Double SSE() {
+		System.out.println("\tCounting SSE...");
 		Double d_re = 0D;
 		for (int i = 0; i < num_cluster; i++) // xet tung nhom cluster
 		for (int j = 0; j < this.groups.get(i).getValues().size(); j++) // xet tung mau du lieu trong nhom
