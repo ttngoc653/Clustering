@@ -25,7 +25,7 @@ public class mainApplication {
 			for (int i = 0; i < _data_file.getColumnName().size(); i++) {
 				fw.write("\n"+String.format("%-15s", _data_file.getColumnName().get(i)));
 				for (int j = 0; j < _cluster.getNumCluster(); j++) {
-					fw.write(String.format("%-6s", String.format("%.2f", Double.parseDouble(_cluster.getCenteres().get(j).split(",")[i]))));
+					fw.write(String.format("%-6s", String.format("%.2f", Double.parseDouble(_cluster.getGroups().get(j).mean().split(",")[i]))));
 				}
 			}
 
